@@ -1,10 +1,3 @@
-<!Doctype html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-</head>
-<body>
-<div markdown="1">
 
 # markdown tests
 ## h2
@@ -25,8 +18,3 @@ trying `inline code`
 ```python
 print("Hello World")
 ```
-
-</div>
-
-</body>
-</html>
