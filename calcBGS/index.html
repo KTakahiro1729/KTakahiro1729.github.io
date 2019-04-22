@@ -37,7 +37,7 @@ input
 <body>
 <div id="main_content_wrap" class="outer">
 <section id="main_content" class="inner">
-<div id='app'>
+<div id='supplemental'>
 
 <h2>補正用データ</h2>
 <table>
@@ -83,6 +83,9 @@ input
   </tr>
 </table>
 
+
+</div>
+<div id='blood'>
 <h2>検査項目</h2>
 <table>
   <tr>
@@ -146,15 +149,10 @@ function lh_func(val, min, max, return_l="低値", return_h="高値", return_n="
   if (max < val) {return return_h;}
   return return_n;
 }
-const vm = new Vue({
- el: "#app",
+const sup_info = new Vue({
+ el: "#supplemental",
  data: {
  val_cli: 0, val_tpr: 25, per_o2: 21, val_prs_steam: 47, val_age: 20,
- 
- min_ph: 7.35, max_ph:7.45, val_ph: 7.4,
- min_paco2: 35, max_paco2:45, val_paco2: 40,
- min_pao2: 80, max_pao2:100, val_pao2: 90,
- min_AaDo2:0,
  },
  computed:{
    val_prs_all: function(){
@@ -171,6 +169,19 @@ const vm = new Vue({
     return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2).toFixed(1)
     // per_o2 was in ratio
      },
+
+    }
+  })
+
+const bld_info = new Vue({
+ el: "#blood",
+ data: {
+ min_ph: 7.35, max_ph:7.45, val_ph: 7.4,
+ min_paco2: 35, max_paco2:45, val_paco2: 40,
+ min_pao2: 80, max_pao2:100, val_pao2: 90,
+ min_AaDo2:0,
+ },
+ computed:{
    lh_ph: function(){
       return lh_func(this.val_ph, this.min_ph, this.max_ph);
      },
@@ -181,13 +192,13 @@ const vm = new Vue({
      return lh_func(this.val_pao2, this.min_pao2, this.max_pao2);
      },
    val_pAo2:function(){
-     return Number((this.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
+     return Number((sup_info.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
      },
    val_AaDo2: function(){
      return Number((this.val_pAo2-this.val_pao2).toFixed(1));
      },
    max_AaDo2: function(){
-     return Number(Math.max(10, 0.3*this.val_age).toFixed(1))
+     return Number(Math.max(10, 0.3*sup_info.val_age).toFixed(1))
    },
    lh_AaDo2: function(){
      return lh_func(this.val_AaDo2, this.min_AaDo2, this.max_AaDo2)
