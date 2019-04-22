@@ -15,7 +15,61 @@
 <meta property="og:site_name" content="KTakahiro1729.github.io" />
 <script src="https://unpkg.com/vue"></script>
 <!-- End Jekyll SEO tag -->
-
+<script>
+function lh_func(val, min, max, return_l="低値", return_h="高値", return_n="正常"){
+  if (val < min) {return return_l;}
+  if (max < val) {return return_h;}
+  return return_n;
+}
+const vm = new Vue({
+ el: "#app",
+ data: {
+ val_cli: 0, val_tpr: 25, per_o2: 21, val_prs_steam: 47, val_age: 20,
+ 
+ min_ph: 7.35, max_ph:7.45, val_ph: 7.4,
+ min_paco2: 35, max_paco2:45, val_paco2: 40,
+ min_pao2: 80, max_pao2:100, val_pao2: 90,
+ min_AaDo2:0,
+ },
+ computed:{
+   val_prs_all: function(){
+     let result_mmHg = 760*(1-(0.0065*parseFloat(this.val_cli))/(parseFloat(this.val_tpr)+0.0065*parseFloat(this.val_cli)+273.15))**5.275;
+     return Number(result_mmHg).toFixed(1);
+     },
+   val_prs_dry_o2: function(){
+     return Number(this.val_prs_all * this.per_o2/100).toFixed(1);
+     },
+  val_prs_wet_o2: function(){
+    if (this.per_o2 > 1){
+      return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2/100).toFixed(1); // per_o2 was in percent
+    } 
+    return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2).toFixed(1)
+    // per_o2 was in ratio
+     },
+   lh_ph: function(){
+      return lh_func(this.val_ph, this.min_ph, this.max_ph);
+     },
+   lh_paco2: function(){
+     return lh_func(this.val_paco2, this.min_paco2, this.max_paco2);
+     },
+   lh_pao2: function(){
+     return lh_func(this.val_pao2, this.min_pao2, this.max_pao2);
+     },
+   val_pAo2:function(){
+     return Number((this.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
+     },
+   val_AaDo2: function(){
+     return Number((this.val_pAo2-this.val_pao2).toFixed(1));
+     },
+   max_AaDo2: function(){
+     return Number(Math.max(10, 0.3*this.val_age).toFixed(1))
+   },
+   lh_AaDo2: function(){
+     return lh_func(this.val_AaDo2, this.min_AaDo2, this.max_AaDo2)
+     }
+    }
+  })
+</script>
   </head>
 
 <body>
@@ -116,61 +170,7 @@
 </div>
 
 
-<script>
-function lh_func(val, min, max, return_l="低値", return_h="高値", return_n="正常"){
-  if (val < min) {return return_l;}
-  if (max < val) {return return_h;}
-  return return_n;
-}
-const vm = new Vue({
- el: "#app",
- data: {
- val_cli: 0, val_tpr: 25, per_o2: 21, val_prs_steam: 47, val_age: 20,
- 
- min_ph: 7.35, max_ph:7.45, val_ph: 7.4,
- min_paco2: 35, max_paco2:45, val_paco2: 40,
- min_pao2: 80, max_pao2:100, val_pao2: 90,
- min_AaDo2:0,
- },
- computed:{
-   val_prs_all: function(){
-     let result_mmHg = 760*(1-(0.0065*parseFloat(this.val_cli))/(parseFloat(this.val_tpr)+0.0065*parseFloat(this.val_cli)+273.15))**5.275;
-     return Number(result_mmHg).toFixed(1);
-     },
-   val_prs_dry_o2: function(){
-     return Number(this.val_prs_all * this.per_o2/100).toFixed(1);
-     },
-  val_prs_wet_o2: function(){
-    if (this.per_o2 > 1){
-      return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2/100).toFixed(1); // per_o2 was in percent
-    } 
-    return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2).toFixed(1)
-    // per_o2 was in ratio
-     },
-   lh_ph: function(){
-      return lh_func(this.val_ph, this.min_ph, this.max_ph);
-     },
-   lh_paco2: function(){
-     return lh_func(this.val_paco2, this.min_paco2, this.max_paco2);
-     },
-   lh_pao2: function(){
-     return lh_func(this.val_pao2, this.min_pao2, this.max_pao2);
-     },
-   val_pAo2:function(){
-     return Number((this.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
-     },
-   val_AaDo2: function(){
-     return Number((this.val_pAo2-this.val_pao2).toFixed(1));
-     },
-   max_AaDo2: function(){
-     return Number(Math.max(10, 0.3*this.val_age).toFixed(1))
-   },
-   lh_AaDo2: function(){
-     return lh_func(this.val_AaDo2, this.min_AaDo2, this.max_AaDo2)
-     }
-    }
-  })
-</script>
+
 
 <p>測定値をサーバーに送信したり、ブラウザに保存したりすることはありません。
 不安な方は、Ctrl-sでこのページを保存した後、ご使用ください。</p>
