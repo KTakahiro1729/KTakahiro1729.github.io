@@ -2,6 +2,11 @@
 
 <div id='app'>
 
+
+|検査項目|単位|正常値|計測値|解釈|
+|:-------|---:|-----:|-----:|:--:|
+|pH||{{min_ph}}~{{max_ph}}|<input class='form-control' type='number' v-model='val_ph'>|{{lh_ph}}|
+
 <table>
   <tr>
     <th>検査項目</th>
