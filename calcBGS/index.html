@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=80d00fc067c60f5ca086001c3ff771b79953d1a5">
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>KTakahiro1729.github.io</title>
+<meta name="generator" content="Jekyll v3.7.4" />
+<meta property="og:title" content="KTakahiro1729.github.io" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://ktakahiro1729.github.io/ICD10/A/00.html" />
+<meta property="og:url" content="https://ktakahiro1729.github.io/ICD10/A/00.html" />
+<meta property="og:site_name" content="KTakahiro1729.github.io" />
+<script type="application/ld+json">
+{"@type":"WebPage","url":"https://ktakahiro1729.github.io/ICD10/A/00.html","headline":"KTakahiro1729.github.io","@context":"http://schema.org"}</script>
+
+<script src="https://unpkg.com/vue"></script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+
+<body>
+<div id='app'>
+
+補正用データ
+<table>
+  <tr>
+    <th>項目</th>
+    <th>値</th>
+  </tr>
+  <tr>
+    <td>標高</td>
+    <td><input class='form-control' type='number' v-model='val_cli'>m</td>
+  </tr>
+  <tr>
+    <td>気温</td>
+    <td><input class='form-control' type='number' v-model='val_tpr'>℃</td>
+  </tr>
+  <tr>
+    <td>酸素の割合(FiO2)</td>
+    <td><input class='form-control' type='number' v-model='per_o2'>%</td>
+  </tr>
+  <tr>
+    <td>気道の水蒸気圧</td>
+    <td>
+      <input class='form-control' type='number' v-model='val_prs_steam'>mmHg
+    </td>
+  </tr>
+  <tr>
+    <td>年齢</td>
+    <td>
+      <input class='form-control' type='number' v-model='val_age'>才
+    </td>
+  </tr>
+  <tr>
+    <td>大気圧</td>
+    <td>{{val_prs_all}}mmHg</td>
+  </tr>
+  <tr>
+    <td>乾燥大気の酸素分圧</td>
+    <td>{{val_prs_dry_o2}}mmHg</td>
+  </tr>
+  <tr>
+    <td>気道の酸素分圧</td>
+    <td>{{val_prs_wet_o2}}mmHg</td>
+  </tr>
+</table>
+
+検査項目
+<table>
+  <tr>
+    <th>検査項目</th>
+    <th>単位</th>
+    <th>正常値</th>
+    <th>計測値</th>
+    <th>解釈</th>
+  </tr>
+  <tr>
+    <td>pH</td>
+    <td></td>
+    <td><input class='form-control' type='number' v-model='min_ph'> ~ <input class='form-control' type='number' v-model='max_ph'></td>
+    <td><input class='form-control' type='number' v-model='val_ph'></td>
+    <td>{{lh_ph}}</td>
+  </tr>
+  <tr>
+    <td>PaCO2</td>
+    <td>mmHg</td>
+    <td><input class='form-control' type='number' v-model='min_paco2'> ~ <input class='form-control' type='number' v-model='max_paco2'></td>
+    <td><input class='form-control' type='number' v-model='val_paco2'></td>
+    <td>{{lh_paco2}}</td>
+  </tr>
+  <tr>
+    <td>PaO2</td>
+    <td>mmHg</td>
+    <td><input class='form-control' type='number' v-model='min_pao2'> ~ <input class='form-control' type='number' v-model='max_pao2'></td>
+    <td><input class='form-control' type='number' v-model='val_pao2'></td>
+    <td>{{lh_pao2}}</td>
+  </tr>
+  <tr>
+    <td>PAO2</td>
+    <td>mmHg</td>
+    <td></td>
+    <td>{{val_pAo2}}</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>A-aDO2</td>
+    <td>mmHg</td>
+    <td>{{min_AaDo2}}~{{max_AaDo2}}</td>
+    <td>{{val_AaDo2}}</td>
+    <td>{{lh_AaDo2}}</td>
+  </tr>
+</table>
+
+</div>
+
+
+<script>
+function lh_func(val, min, max, return_l="低値", return_h="高値", return_n="正常"){
+  if (val < min) {return return_l;}
+  if (max < val) {return return_h;}
+  return return_n;
+}
+const vm = new Vue({
+ el: "#app",
+ data: {
+ val_cli: 0, val_tpr: 25, per_o2: 21, val_prs_steam: 47, val_age: 20,
+ 
+ min_ph: 7.35, max_ph:7.45, val_ph: 7.4,
+ min_paco2: 35, max_paco2:45, val_paco2: 40,
+ min_pao2: 80, max_pao2:100, val_pao2: 90,
+ min_AaDo2:0,
+ },
+ computed:{
+   val_prs_all: function(){
+     let result_mmHg = 760*(1-(0.0065*parseFloat(this.val_cli))/(parseFloat(this.val_tpr)+0.0065*parseFloat(this.val_cli)+273.15))**5.275;
+     return Number(result_mmHg).toFixed(1);
+     },
+   val_prs_dry_o2: function(){
+     return Number(this.val_prs_all * this.per_o2/100).toFixed(1);
+     },
+  val_prs_wet_o2: function(){
+    if (this.per_o2 > 1){
+      return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2/100).toFixed(1); // per_o2 was in percent
+    } 
+    return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2).toFixed(1)
+    // per_o2 was in ratio
+     },
+   lh_ph: function(){
+      return lh_func(this.val_ph, this.min_ph, this.max_ph);
+     },
+   lh_paco2: function(){
+     return lh_func(this.val_paco2, this.min_paco2, this.max_paco2);
+     },
+   lh_pao2: function(){
+     return lh_func(this.val_pao2, this.min_pao2, this.max_pao2);
+     },
+   val_pAo2:function(){
+     return Number((this.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
+     },
+   val_AaDo2: function(){
+     return Number((this.val_pAo2-this.val_pao2).toFixed(1));
+     },
+   max_AaDo2: function(){
+     return Number(Math.max(10, 0.3*this.val_age).toFixed(1))
+   },
+   lh_AaDo2: function(){
+     return lh_func(this.val_AaDo2, this.min_AaDo2, this.max_AaDo2)
+     }
+    }
+  })
+</script>
+
+測定値をサーバーに送信したり、ブラウザに保存したりすることはありません。
+不安な方は、Ctrl-sでこのページを保存した後、ご使用ください。
+
+</body>
