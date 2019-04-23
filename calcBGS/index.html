@@ -29,6 +29,8 @@ input
  width: 35px;
  text-align: right;
 }
+
+
 </style>
 <!-- End Jekyll SEO tag -->
 
@@ -83,59 +85,70 @@ input
   </tr>
 </table>
 
-
 </div>
 <div id='blood'>
 <h2>検査項目</h2>
 <table>
   <tr>
     <th>検査項目</th>
-    <th>単位</th>
-    <th>正常値</th>
+    <th>正常最低値</th>
+    <th></th>
+    <th>正常最高値</th>
     <th>計測値</th>
     <th>解釈</th>
   </tr>
   <tr>
     <td>pH</td>
-    <td></td>
-    <td><input class='form-control' type='number' v-model='min_ph'> ~ <input class='form-control' type='number' v-model='max_ph'></td>
+    <td><input type='number' v-model='min_ph'></td>
+    <td>~</td>
+    <td><input class='form-control' type='number' v-model='max_ph'></td>
     <td><input class='form-control' type='number' v-model='val_ph'></td>
     <td>{{lh_ph}}</td>
   </tr>
   <tr>
     <td>PaCO2</td>
-    <td>mmHg</td>
-    <td><input class='form-control' type='number' v-model='min_paco2'> ~ <input class='form-control' type='number' v-model='max_paco2'></td>
-    <td><input class='form-control' type='number' v-model='val_paco2'></td>
+    <td><input type='number' v-model='min_paco2'>mmHg</td>
+    <td>~</td>
+    <td><input class='form-control' type='number' v-model='max_paco2'>mmHg</td>
+    <td><input type='number' v-model='val_paco2'>mmHg</td>
     <td>{{lh_paco2}}</td>
   </tr>
   <tr>
     <td>PaO2</td>
-    <td>mmHg</td>
-    <td><input class='form-control' type='number' v-model='min_pao2'> ~ <input class='form-control' type='number' v-model='max_pao2'></td>
-    <td><input class='form-control' type='number' v-model='val_pao2'></td>
+    <td><input type='number' v-model='min_pao2'>mmHg</td>
+    <td>~</td>
+    <td><input type='number' v-model='max_pao2'>mmHg</td>
+    <td><input type='number' v-model='val_pao2'>mmHg</td>
     <td>{{lh_pao2}}</td>
   </tr>
   <tr>
+    <td>pH</td>
+    <td>{{min_ph}}</td>
+    <td>~</td>
+    <td>{{max_ph}}</td>
+    <td>{{val_pAo2}}mmHg</td>
+    <td>-</td>
+  </tr>
+  <tr>
     <td>PAO2</td>
-    <td>mmHg</td>
     <td></td>
-    <td>{{val_pAo2}}</td>
+    <td></td>
+    <td></td>
+    <td>{{val_pAo2}}mmHg</td>
     <td>-</td>
   </tr>
   <tr>
     <td>A-aDO2</td>
-    <td>mmHg</td>
-    <td>{{min_AaDo2}}~{{max_AaDo2}}</td>
-    <td>{{val_AaDo2}}</td>
+    <td>{{min_AaDo2}}mmHg</td>
+    <td>~</td>
+    <td>{{max_AaDo2}}mmHg</td>
+    <td>{{val_AaDo2}}mmHg</td>
     <td>{{lh_AaDo2}}</td>
   </tr>
   
 </table>
 
 </div>
-
-
 
 
 <p>測定値をサーバーに送信したり、ブラウザに保存したりすることはありません。
@@ -169,9 +182,8 @@ const sup_info = new Vue({
     return Number((this.val_prs_all - this.val_prs_steam) * this.per_o2).toFixed(1)
     // per_o2 was in ratio
      },
-
-    }
-  })
+  }
+})
 
 const bld_info = new Vue({
  el: "#blood",
@@ -180,31 +192,32 @@ const bld_info = new Vue({
  min_paco2: 35, max_paco2:45, val_paco2: 40,
  min_pao2: 80, max_pao2:100, val_pao2: 90,
  min_AaDo2:0,
+ 
  },
  computed:{
    lh_ph: function(){
       return lh_func(this.val_ph, this.min_ph, this.max_ph);
-     },
+   },
    lh_paco2: function(){
      return lh_func(this.val_paco2, this.min_paco2, this.max_paco2);
-     },
+   },
    lh_pao2: function(){
      return lh_func(this.val_pao2, this.min_pao2, this.max_pao2);
-     },
+   },
    val_pAo2:function(){
      return Number((sup_info.val_prs_wet_o2 - this.val_paco2/0.8).toFixed(2));
-     },
+   },
    val_AaDo2: function(){
      return Number((this.val_pAo2-this.val_pao2).toFixed(1));
-     },
+   },
    max_AaDo2: function(){
      return Number(Math.max(10, 0.3*sup_info.val_age).toFixed(1))
    },
    lh_AaDo2: function(){
      return lh_func(this.val_AaDo2, this.min_AaDo2, this.max_AaDo2)
-     }
-    }
-  })
+   }
+  }
+})
 </script>
 
 </body>
