@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+  <head><script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<title>エネチェック</title>
+
+<meta charset="UTF-8">
+
+<!-- <style>
+input
+{
+ border: 0;
+ background-color: #ffffff;
+ box-shadow: none;
+ border-radius: 1px;
+ 
+ font-family:inherit;
+ font-size:inherit;
+ 
+ width: 35px;
+ text-align: right;
+}
+</style> -->
+
+</head>
+
+<body>
+<div id="app">
+事前入力済み<br>
+<select v-model="selected">
+    <option disabled value="">選択して下さい</option>
+    <option v-for="option in options" v-bind:value="option" v-bind:key="option.id">
+        {{ option.name }}
+    </option>
+</select>
+<button @click="fill_preinput">の履歴を入力</button><br>
+<br>
+今の時間<br>
+<input type="text" name="" id="" v-model="now"><br>
+----<br>
+開始時のエネルギー<br>
+----<br>
+<input type="text" name="" id="" v-model="ene"><br>
+<button @click="calc_ene_left">計算する</button><br>
+現在のエネルギー<br>
+<span style="font-size:50px">{{ ene_left }}</span><br>
+----<br>
+ログ入力<br>
+<textarea name="logs" id="logs" cols="15" rows="20"  v-model='logs'></textarea><br>
+
+</div>
+
+
+<script>
+function getnow(){
+    var time = new Date();
+    return ("0" + time.getHours()).slice(-2) + ('0'+time.getMinutes()).slice(-2)
+}
+
+function add_2400(bef,nxt){
+    while (nxt < bef) {
+            nxt += 2400;
+        }
+    return nxt
+}
+
+function parse_logs(raw_logs){
+    logs = [];
+    var index = 0;
+    for (log of String(raw_logs).split("\n")) {
+        if ((-log) | (log==="0000")) {
+            logs[index] = Number(log);
+            index += 1;
+        }
+    }
+    for (let index = 1; index < logs.length; index++) {
+        logs[index] = add_2400(logs[index-1], logs[index])
+    }
+    return logs
+}
+
+function main(logs, now, ene){
+    var recover = logs[0] + 100;
+    for (const log of logs) {
+        var [recover, ene] = update(recover, ene, log);
+    }
+    now = add_2400(logs.slice(-1)[0], Number(now));
+    var [recover, ene] = rest_till(recover, ene, now);
+    return ene;
+
+}
+
+function update(recover, ene, log){
+    var [recover, ene] = rest_till(recover, ene, log);
+    console.log(log, ene, "->", ene-1);
+    ene -= 1;
+    return [recover, ene];
+}
+function rest_till(recover, ene, till){
+    while (till > recover) {
+        if (ene < 9) {
+            console.log(recover, ene, "->", ene+1, "↑");
+            ene += 1;
+            recover += 100;
+        } else {
+            recover += 100;
+        }
+    }
+    return [recover, ene];
+}
+const app = new Vue({
+ el: "#app",
+ data: {
+ logs: ["2200"],
+ ene_left: 0,
+ now: getnow(),
+ selected: '',
+ ene:9,
+ options:[
+    {id:1,
+     name:"セントヘイヴン",
+     logs:"2202,2204,2207,2213,2219,2233,2305,2339,0727,0727,0901,0901,1139,1139,1212,1441,1441,1441,1748,1748,2232,2235,2236,2241,2244",
+     ene:9,
+     }
+],
+ },
+ methods:{
+    calc_ene_left: function(){
+        this.ene_left = main(parse_logs(this.logs), this.now,this.ene);
+    },
+    fill_preinput: function(){
+        this.logs = this.selected.logs.split(",").join("\n");
+        this.ene = this.selected.ene;
+        this.calc_ene_left()
+    }
+  }
+})
+
+</script>
+
+</body>
