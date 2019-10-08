@@ -20,13 +20,15 @@
 <input type="text" name="" id="" v-model="now"><br>
 ----<br>
 開始時のエネルギー<br>
-----<br>
 <input type="text" name="" id="" v-model="ene"><br>
 <button @click="calc_ene_left">計算する</button><br>
 現在のエネルギー<br>
 <span style="font-size:50px">{{ene_left - cur_min }} 〜 {{ ene_left }} </span><br>
+予想次エネ回復時間<br>
+{{ this.estim.slice(0,2)+":"+this.estim.slice(2,4)}}<br>
+
 ----<br>
-ログ入力<br>
+ログ入力（保存しないから、自分でメモ帳とかにつけといてね）<br>
 <textarea name="logs" id="logs" cols="15" rows="100"  v-model='logs'></textarea><br>
 
 </div>
@@ -71,7 +73,7 @@ function main(logs, now, ene){
     }
     now = add_2400(logs.slice(-1)[0], Number(now));
     var [recover, ene] = rest_till(recover, ene, now);
-    return ene;
+    return [recover, ene];
 
 }
 
@@ -102,6 +104,7 @@ const app = new Vue({
  selected: '',
  ene:9,
  cur_min:9,
+ estim:"0000",
  options:[
     {id:1,
      name:"セントヘイヴン",
@@ -128,7 +131,9 @@ const app = new Vue({
  },
  methods:{
     calc_ene_left: function(){
-        this.ene_left = main(parse_logs(this.logs), this.now,this.ene);
+        [estim,this.ene_left] = main(parse_logs(this.logs), this.now,this.ene);
+        this.estim = ("000" + estim % 2400).slice(-4);
+
     },
     fill_preinput: function(){
         this.logs = this.selected.logs.split(",").join("\n");
