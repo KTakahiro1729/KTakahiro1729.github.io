@@ -24,7 +24,7 @@
 <input type="text" name="" id="" v-model="ene"><br>
 <button @click="calc_ene_left">計算する</button><br>
 現在のエネルギー<br>
-<span style="font-size:50px">{{ ene_left }}</span><br>
+<span style="font-size:50px">{{ene_left - cur_min }} 〜 {{ ene_left }} </span><br>
 ----<br>
 ログ入力<br>
 <textarea name="logs" id="logs" cols="15" rows="100"  v-model='logs'></textarea><br>
@@ -61,9 +61,13 @@ function parse_logs(raw_logs){
 }
 
 function main(logs, now, ene){
+    app.cur_min = 9;
     var recover = logs[0] + 100;
     for (const log of logs) {
         var [recover, ene] = update(recover, ene, log);
+        if (ene < app.cur_min){
+            app.cur_min = ene;
+        }
     }
     now = add_2400(logs.slice(-1)[0], Number(now));
     var [recover, ene] = rest_till(recover, ene, now);
@@ -93,10 +97,11 @@ const app = new Vue({
  el: "#app",
  data: {
  logs: ["2200"],
- ene_left: 0,
+ ene_left: 9,
  now: getnow(),
  selected: '',
  ene:9,
+ cur_min:9,
  options:[
     {id:1,
      name:"セントヘイヴン",
