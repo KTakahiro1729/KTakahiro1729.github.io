@@ -28,23 +28,23 @@ function formatDate (date, format) {
   return format;
 };
 const main_url = "https://docs.google.com/forms/d/e/1FAIpQLSdOAiWPYcx17JU1tPtUE3fazsIGq9E82aASXT2yH6xAHQ2_KQ/viewform"
+var load_now = new Date(Date.now())
 const make_url = new Vue({
  el: "#make_url",
  data: {
- now: new Date(Date.now()),
- },
- computed: {
- arrive_url: vm => `${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(vm.now, 'yyyy-MM-dd+HH:mm')}`,
- leave_url:  vm => `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(vm.now, 'yyyy-MM-dd+HH:mm')}`,
- show_now: vm => formatDate(vm.now, 'yyyy年MM月dd日　HH:mm:ss'),
- 
+ arrive_url:`${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(load_now, 'yyyy-MM-dd+HH:mm')}`,
+ leave_url: `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(load_now, 'yyyy-MM-dd+HH:mm')}`,
+ show_now: formatDate(load_now, 'yyyy年MM月dd日　HH:mm:ss'),
  },
  mounted: function() {
   setInterval(this.updateTime, 1000);
  },
 methods: {
 updateTime: function() {
- this.now = Date(Date.now())
+ var now = Date(Date.now())
+ this.arrive_url = `${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(now, 'yyyy-MM-dd+HH:mm')}`
+ this.leave_url = `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(now, 'yyyy-MM-dd+HH:mm')}`
+ this.show_now = formatDate(now, 'yyyy年MM月dd日　HH:mm:ss')
 }
 }
 })
