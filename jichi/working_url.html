@@ -11,7 +11,8 @@
 <section id="main_content" class="inner">
 <div id='make_url'>
   <p>{{show_now}}</p>
-  <p>{{arrive_url}} </p>
+  <a v-bind:href="arrive_url">出勤</p>
+  <a v-bind:href="leave_url">退勤</p>
   </div>
 </section>
 </div>
