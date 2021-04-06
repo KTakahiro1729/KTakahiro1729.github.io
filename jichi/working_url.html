@@ -31,7 +31,7 @@ const main_url = "https://docs.google.com/forms/d/e/1FAIpQLSdOAiWPYcx17JU1tPtUE3
 const make_url = new Vue({
  el: "#make_url",
  data: {
- now = new Date(Date.now()),
+ now: new Date(Date.now()),
  arrive_url: `${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(this.now, 'yyyy-MM-dd+HH:mm')}`,
  leave_url:  `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(this.now, 'yyyy-MM-dd+HH:mm')}`,
  show_now: formatDate(this.now, 'yyyy年MM月dd日　HH:mm:ss'),
