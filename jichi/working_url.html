@@ -34,7 +34,7 @@ const make_url = new Vue({
  now = new Date(Date.now()),
  arrive_url: `${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(this.now, 'yyyy-MM-dd+HH:mm')}`,
  leave_url:  `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(this.now, 'yyyy-MM-dd+HH:mm')}`,
- show_now: formatDate(now, 'yyyy年MM月dd日　HH:mm:ss'),
+ show_now: formatDate(this.now, 'yyyy年MM月dd日　HH:mm:ss'),
  },
  mounted: function() {
   setInterval(this.updateTime, 1000);
