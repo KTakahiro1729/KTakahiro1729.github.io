@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=80d00fc067c60f5ca086001c3ff771b79953d1a5">
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<style>
+input
+{
+ border: 0;
+ background-color: #ffffff;
+ box-shadow: none;
+ border-radius: 1px;
+ 
+ font-family:inherit;
+ font-size:inherit;
+ 
+ width: 35px;
+ text-align: right;
+}
+
+
+</style>
+</head>
+<body>
+
+https://docs.google.com/forms/d/e/1FAIpQLSdOAiWPYcx17JU1tPtUE3fazsIGq9E82aASXT2yH6xAHQ2_KQ/viewform?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=2021-04-01+08:01
+https://docs.google.com/forms/d/e/1FAIpQLSdOAiWPYcx17JU1tPtUE3fazsIGq9E82aASXT2yH6xAHQ2_KQ/viewform?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=2021-04-01+08:0
+
+{{arrive_url}}
+
+<script>
+function formatDate (date, format) {
+  format = format.replace(/yyyy/g, date.getFullYear());
+  format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+  format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2));
+  format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2));
+  format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2));
+  format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2));
+  format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3));
+  return format;
+};
+const main_url = "https://docs.google.com/forms/d/e/1FAIpQLSdOAiWPYcx17JU1tPtUE3fazsIGq9E82aASXT2yH6xAHQ2_KQ/viewform
+let now = new Date.now()
+?usp=pp_url&entry.1592694772=${}&entry.783373019=2021-04-01+08:01
+
+const bld_info = new Vue({
+ el: "#blood",
+ data: {
+ arrive_url: `${main_url}?usp=pp_url&entry.1592694772=%E5%87%BA%E5%8B%A4&entry.783373019=${formatDate(date, 'yyyy-MM-dd+HH:mm')}`,
+ leave_url:  `${main_url}?usp=pp_url&entry.1592694772=%E9%80%80%E5%8B%A4&entry.783373019=${formatDate(date, 'yyyy-MM-dd+HH:mm')}`,
+ }
+})
+</script>
+
+</body>
